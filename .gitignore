@@ -1,0 +1,17 @@
+# macOS
+.DS_Store
+
+# Qt generated files
+*.o
+*.obj
+*.exe
+*.user
+*.moc
+moc_*.cpp
+*.pro.user
+Makefile
+browser
+
+# Backup or temp
+*~
+*.swp
