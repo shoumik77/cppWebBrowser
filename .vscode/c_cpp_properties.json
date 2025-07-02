@@ -8,7 +8,8 @@
           "/opt/homebrew/include/QtCore",
           "/opt/homebrew/include/QtWidgets",
           "/opt/homebrew/include/QtWebEngineWidgets",
-          "/opt/homebrew/include/QtGui"
+          "/opt/homebrew/include/QtGui",
+          "/opt/homebrew/opt/qt/include/QtNetwork"
         ],
         "defines": [
           "QT_CORE_LIB",

@@ -4,6 +4,8 @@
 #include <QAction>
 #include <QWebEngineView>
 #include <QVBoxLayout>
+#include <QMessageBox>
+
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     // Create toolbar
@@ -18,6 +20,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     toolbar->addWidget(urlBar);
 
     QAction *newTabAction = toolbar->addAction("New Tab");
+    QAction *runJSAction = toolbar->addAction("Run JS");
+    connect(runJSAction, &QAction::triggered, this, &MainWindow::runJSInCurrentTab);
 
     // Tabs
     tabs = new QTabWidget(this);
@@ -49,7 +53,8 @@ MainWindow::~MainWindow() {}
 
 void MainWindow::newTab(const QUrl &url) {
     BrowserTab *view = new BrowserTab;
-
+    manager = new QNetworkAccessManager(this);
+    connect(manager, &QNetworkAccessManager::finished, this, &MainWindow::handleAPIResponse);
     view->load(url);
 
     int index = tabs->addTab(view, "New Tab");
@@ -58,6 +63,11 @@ void MainWindow::newTab(const QUrl &url) {
     connect(view, &QWebEngineView::titleChanged, this, [=](const QString &title) {
         tabs->setTabText(index, title);
     });
+
+    connect(view, &QWebEngineView::iconChanged, this, [=](const QIcon &icon) {
+    tabs->setTabIcon(index, icon);
+    });
+
 
     connect(view, &QWebEngineView::urlChanged, this, &MainWindow::updateUrlBar);
 }
@@ -85,3 +95,28 @@ void MainWindow::currentTabChanged(int index) {
     if (auto *view = qobject_cast<QWebEngineView*>(tabs->widget(index)))
         urlBar->setText(view->url().toString());
 }
+
+void MainWindow::fetchAPI() {
+    QUrl url("https://jsonplaceholder.typicode.com/todos/1");
+    QNetworkRequest request(url);
+    manager->get(request);
+}
+
+void MainWindow::handleAPIResponse(QNetworkReply *reply) {
+    if (reply->error() == QNetworkReply::NoError) {
+        QString data = reply->readAll();
+        QMessageBox::information(this, "API Response", data);
+    } else {
+        QMessageBox::warning(this, "Error", reply->errorString());
+    }
+    reply->deleteLater();
+}
+
+void MainWindow::runJSInCurrentTab() {
+    QWebEngineView *view = qobject_cast<QWebEngineView *>(tabs->currentWidget());
+    if (view) {
+        view->page()->runJavaScript("alert('This JS ran from C++');");
+    }
+}
+
+
