@@ -1,45 +1,85 @@
 #include "mainwindow.h"
 #include <QToolBar>
-#include <QLineEdit>
 #include <QAction>
+#include <QWebEngineView>
+#include <QVBoxLayout>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
-    view = new QWebEngineView(this);
-    view->load(QUrl("https://www.google.com"));
-    setCentralWidget(view);
-
     // Create toolbar
     QToolBar *toolbar = addToolBar("Navigation");
 
-    // Back
-    QAction *backAction = toolbar->addAction("Back");
-    connect(backAction, &QAction::triggered, view, &QWebEngineView::back);
+    QAction *back = toolbar->addAction("Back");
+    QAction *forward = toolbar->addAction("Forward");
+    QAction *reload = toolbar->addAction("Reload");
 
-    // Forward
-    QAction *forwardAction = toolbar->addAction("Forward");
-    connect(forwardAction, &QAction::triggered, view, &QWebEngineView::forward);
-
-    // Reload
-    QAction *reloadAction = toolbar->addAction("Reload");
-    connect(reloadAction, &QAction::triggered, view, &QWebEngineView::reload);
-
-    // URL bar
     urlBar = new QLineEdit(this);
     urlBar->setPlaceholderText("Enter URL...");
-    urlBar->setClearButtonEnabled(true);
     toolbar->addWidget(urlBar);
 
+    QAction *newTabAction = toolbar->addAction("New Tab");
+
+    // Tabs
+    tabs = new QTabWidget(this);
+    tabs->setTabsClosable(true);
+    setCentralWidget(tabs);
+
+    connect(tabs, &QTabWidget::tabCloseRequested, this, &MainWindow::closeCurrentTab);
+    connect(tabs, &QTabWidget::currentChanged, this, &MainWindow::currentTabChanged);
     connect(urlBar, &QLineEdit::returnPressed, this, &MainWindow::navigateToUrl);
+    connect(newTabAction, &QAction::triggered, this, [=]() { newTab(); });
+
+    connect(back, &QAction::triggered, this, [=]() {
+        if (auto *view = currentWebView()) view->back();
+    });
+
+    connect(forward, &QAction::triggered, this, [=]() {
+        if (auto *view = currentWebView()) view->forward();
+    });
+
+    connect(reload, &QAction::triggered, this, [=]() {
+        if (auto *view = currentWebView()) view->reload();
+    });
+
+    // Start with one tab
+    newTab();
+}
+
+MainWindow::~MainWindow() {}
+
+void MainWindow::newTab(const QUrl &url) {
+    auto *view = new QWebEngineView;
+    view->load(url);
+
+    int index = tabs->addTab(view, "New Tab");
+    tabs->setCurrentIndex(index);
+
+    connect(view, &QWebEngineView::titleChanged, this, [=](const QString &title) {
+        tabs->setTabText(index, title);
+    });
+
     connect(view, &QWebEngineView::urlChanged, this, &MainWindow::updateUrlBar);
+}
+
+void MainWindow::closeCurrentTab(int index) {
+    if (tabs->count() > 1)
+        tabs->removeTab(index);
+}
+
+QWebEngineView* MainWindow::currentWebView() {
+    return qobject_cast<QWebEngineView*>(tabs->currentWidget());
 }
 
 void MainWindow::navigateToUrl() {
     QUrl url = QUrl::fromUserInput(urlBar->text());
-    view->load(url);
+    if (auto *view = currentWebView())
+        view->load(url);
 }
 
 void MainWindow::updateUrlBar(const QUrl &url) {
     urlBar->setText(url.toString());
 }
 
-MainWindow::~MainWindow() {}
+void MainWindow::currentTabChanged(int index) {
+    if (auto *view = qobject_cast<QWebEngineView*>(tabs->widget(index)))
+        urlBar->setText(view->url().toString());
+}
