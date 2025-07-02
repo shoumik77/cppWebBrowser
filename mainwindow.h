@@ -16,7 +16,7 @@ public:
     ~MainWindow();
 
 private slots:
-    void newTab(const QUrl &url = QUrl("https://www.google.com"));
+    void newTab(const QUrl &url = QUrl());
     void closeCurrentTab(int index);
     void navigateToUrl();
     void updateUrlBar(const QUrl &url);

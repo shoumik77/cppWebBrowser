@@ -16,3 +16,4 @@ browser
 *~
 *.swp
 qrc_resources.cpp
+.vscode/

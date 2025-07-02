@@ -5,7 +5,7 @@
 #include <QWebEngineView>
 #include <QVBoxLayout>
 #include <QMessageBox>
-
+#include <QCoreApplication>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     // Create toolbar
@@ -55,7 +55,12 @@ void MainWindow::newTab(const QUrl &url) {
     BrowserTab *view = new BrowserTab;
     manager = new QNetworkAccessManager(this);
     connect(manager, &QNetworkAccessManager::finished, this, &MainWindow::handleAPIResponse);
-    view->load(url);
+
+    if (url.isEmpty()) {
+        view->load(QUrl("qrc:/home.html"));  // Embedded HTML via .qrc
+    } else {
+        view->load(url);
+    }
 
     int index = tabs->addTab(view, "New Tab");
     tabs->setCurrentIndex(index);
@@ -65,12 +70,12 @@ void MainWindow::newTab(const QUrl &url) {
     });
 
     connect(view, &QWebEngineView::iconChanged, this, [=](const QIcon &icon) {
-    tabs->setTabIcon(index, icon);
+        tabs->setTabIcon(index, icon);
     });
-
 
     connect(view, &QWebEngineView::urlChanged, this, &MainWindow::updateUrlBar);
 }
+
 
 void MainWindow::closeCurrentTab(int index) {
     if (tabs->count() > 1)
