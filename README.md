@@ -85,6 +85,29 @@ clang++ main.cpp mainwindow.cpp BrowserTab.cpp \
 
 ```
 
+## Running Tests
+ - This browser has 50+ automated test cases using the QtTest framework to verify:
+    - URL loading success
+    - Page load completion
+    - API Data fetching
+    - Visual validation via QWebEngineView
+
+# Build and Run Tests
+```bash
+/opt/homebrew/Cellar/qt/6.9.1/share/qt/libexec/moc browser_tests.h -o moc_browser_tests.cpp
+
+clang++ browser_tests.cpp moc_browser_tests.cpp -std=c++17 \
+  -I. -I/opt/homebrew/opt/qt/include \
+  -F/opt/homebrew/opt/qt/lib \
+  -framework QtTest -framework QtCore -framework QtGui -framework QtWidgets \
+  -framework QtWebEngineCore -framework QtWebEngineWidgets -framework QtNetwork \
+  -Wl,-rpath,/opt/homebrew/opt/qt/lib \
+  -o browser-tests
+
+./browser-tests
+```
+
+
 ## This project was created to demonstrate:
  - Modern C++ application structure
  - Qt GUI event handling
