@@ -85,28 +85,20 @@ clang++ main.cpp mainwindow.cpp BrowserTab.cpp \
 
 ```
 
-## Notes for Reviewers
 ## This project was created to demonstrate:
-
-## Modern C++ application structure
-
-## Qt GUI event handling
-
-## Multi-tabbed browser design
-
-## Networking with REST API integration
-
-## WebEngine embedding and JS execution
-
-## GUI resource packaging with .qrc
-
-## It is a standalone native desktop application and can be extended with features like bookmarks, history, and WebGL support.
+ - Modern C++ application structure
+ - Qt GUI event handling
+ - Multi-tabbed browser design
+ - Networking with REST API integration
+ - WebEngine embedding and JS execution
+ - GUI resource packaging with .qrc
 
 
 
-License
-MIT License
+
+## License
+ - MIT License
 
 ## Author
-## Developed by Shoumik Bisoi
-## GitHub: @shoumik77
+ - Developed by Shoumik Bisoi
+ - GitHub: @shoumik77
