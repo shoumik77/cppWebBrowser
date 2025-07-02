@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include "BrowserTab.h"
 #include <QToolBar>
 #include <QAction>
 #include <QWebEngineView>
@@ -47,7 +48,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 MainWindow::~MainWindow() {}
 
 void MainWindow::newTab(const QUrl &url) {
-    auto *view = new QWebEngineView;
+    BrowserTab *view = new BrowserTab;
+
     view->load(url);
 
     int index = tabs->addTab(view, "New Tab");
