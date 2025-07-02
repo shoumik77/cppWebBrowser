@@ -27,16 +27,16 @@ A lightweight, tabbed C++ web browser built with Qt 6. It features a custom home
 
 ## Installation Instructions (macOS)
 
-### 1. Install dependencies
+## Install dependencies
 
 Install Qt using Homebrew:
 
 ```bash
 brew install qt
+```
 
-### Project Structure
-pgsql
-Copy
+## Structure
+```pgsql
 CBrowser/
 ├── main.cpp
 ├── mainwindow.h / mainwindow.cpp
@@ -46,25 +46,22 @@ CBrowser/
 ├── qrc_resources.cpp (generated)
 ├── moc_mainwindow.cpp (generated)
 ├── moc_BrowserTab.cpp (generated)
+```
 
-### Build Instructions
-### 1. Clone the repository
-bash
-Copy
+## Build Instructions
+```bash
+# Clone Repo
 git clone https://github.com/shoumik77/cppWebBrowser.git
 cd cppWebBrowser
-### 2. Generate Qt Resource .cpp file
-bash
-Copy
+
+# Generate Qt Resource.cpp file
 /opt/homebrew/Cellar/qt/6.9.1/share/qt/libexec/rcc resources.qrc -o qrc_resources.cpp
-### 3. Generate MOC files
-bash
-Copy
+
+# Generate MOC Files
 /opt/homebrew/Cellar/qt/6.9.1/share/qt/libexec/moc mainwindow.h -o moc_mainwindow.cpp
 /opt/homebrew/Cellar/qt/6.9.1/share/qt/libexec/moc BrowserTab.h -o moc_BrowserTab.cpp
-### 4. Compile the project
-bash
-Copy
+
+# Compile with clange
 clang++ main.cpp mainwindow.cpp BrowserTab.cpp \
   moc_mainwindow.cpp moc_BrowserTab.cpp qrc_resources.cpp \
   -std=c++17 -fPIC \
@@ -82,41 +79,34 @@ clang++ main.cpp mainwindow.cpp BrowserTab.cpp \
   -framework QtNetwork -framework AppKit -framework Foundation \
   -Wl,-rpath,/opt/homebrew/opt/qt/lib \
   -o browser
-### 5. Run the application
-bash
-Copy
+
+# Run
 ./browser
-$$ Notes for Reviewers
-$$ This project was created to demonstrate:
 
-$$ Modern C++ application structure
+```
 
-$$ Qt GUI event handling
+## Notes for Reviewers
+## This project was created to demonstrate:
 
-$$ Multi-tabbed browser design
+## Modern C++ application structure
 
-$$ Networking with REST API integration
+## Qt GUI event handling
 
-$$ WebEngine embedding and JS execution
+## Multi-tabbed browser design
 
-$$ GUI resource packaging with .qrc
+## Networking with REST API integration
 
-It is a standalone native desktop application and can be extended with features like bookmarks, history, and WebGL support.
+## WebEngine embedding and JS execution
 
-Troubleshooting
-QWebEngine headers not found?
-Make sure Qt was installed via Homebrew and paths are correct.
+## GUI resource packaging with .qrc
 
-vtable errors?
-Regenerate .cpp files using moc as shown above.
+## It is a standalone native desktop application and can be extended with features like bookmarks, history, and WebGL support.
 
-JavaScript not executing?
-Make sure QWebEnginePage::runJavaScript() is called on the current tab.
+
 
 License
 MIT License
 
-Author
-Developed by Shoumik Bisoi
-GitHub: @shoumik77
-
+## Author
+## Developed by Shoumik Bisoi
+## GitHub: @shoumik77
