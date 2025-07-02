@@ -15,3 +15,4 @@ browser
 # Backup or temp
 *~
 *.swp
+qrc_resources.cpp
